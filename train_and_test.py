@@ -10,8 +10,10 @@ import data_preprocessing
 
 import pandas as pd
 import sklearn.metrics
+import sklearn.naive_bayes
 import sklearn.neighbors
 import sklearn.svm
+import sklearn.tree
 
 def train_and_validate(algorithm):
     """This function is mandated by the requirements.  Argument
@@ -42,10 +44,14 @@ def train_and_validate(algorithm):
     print(accuracy)
 
 def train_naive_bayes(train_X, train_y):
-    pass
+    nb = sklearn.naive_bayes.GaussianNB()
+    nb.fit(train_X, train_y)
+    return nb
 
 def train_decision_tree(train_X, train_y):
-    pass
+    dt = sklearn.tree.DecisionTreeClassifier()
+    dt.fit(train_X, train_y)
+    return dt
 
 def train_knn(train_X, train_y):
     knn = sklearn.neighbors.KNeighborsClassifier(5, n_jobs=-1)
