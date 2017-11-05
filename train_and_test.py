@@ -21,4 +21,10 @@ def train_and_validate(algorithm):
     # I'm going to assume we should use the specified classifier by
     # itself, and using it as the base classifier in an ensemble is
     # cheating.
-    pass
+    train_X, train_y, test_X, test_y = data_preprocessing.get_processed_data()
+
+# N.B.:
+# The labels are very lopsided (it's 0 around 25% of the time)
+# 'education' appears redundant with 'education_num'
+# 'relationship' is likely redundant with 'marital_status' (certain ones at least)
+# 'race' might have some redundancy with 'native_country'

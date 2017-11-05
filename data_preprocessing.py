@@ -9,9 +9,27 @@
 import pandas as pd
 import sklearn.preprocessing as sk
 
+def get_processed_data():
+    """Main top-level function: Returns training & testing data,
+    preprocessed, standardized, and all categorical variables encoded.
+    Specifically, this returns (train_X, train_y, test_X, test_y),
+    where 'train_X' is a DataFrame containing features for the
+    training data, 'train_y' is a Series with the corresponding
+    labels, and likewise for 'test_X' and 'test_y' for testing data."""
+    train_raw = read_data("data/train_data.txt")
+    test_raw = read_data("data/test_data.txt")
+    fill_missing(train_raw)
+    fill_missing(test_raw)
+    train_X, train_y = feature_xform(train_raw)
+    test_X, test_y =  feature_xform(train_raw)
+
+    standardize(train_X, test_X)
+    
+    return (train_X, train_y, test_X, test_y)
+
 def read_data(filename):
     """Loads raw data for this project, given a filename; returns
-    a Pandas dataframe."""
+    a Pandas DataFrame."""
     # Columns below are copied from
     # https://archive.ics.uci.edu/ml/datasets/adult
     columns = ("age", "workclass", "fnlwgt", "education",
@@ -61,6 +79,11 @@ def feature_xform(df):
     return (X, y)
 
 def standardize(train, test):
+    """Given training and testing DataFrames ('train' and 'test'),
+    standardize numerical columns of 'train' to mean 0 and standard
+    deviation 1, and apply the same transform to 'test'.  This
+    modifies both input DataFrames.
+    """
     ss = sk.StandardScaler()
     # Numeric columns needing standardization:
     num_cols = ("age", "fnlwgt", "education_num", "capital_gain",
@@ -68,23 +91,3 @@ def standardize(train, test):
     train.loc[:, num_cols] = ss.fit_transform(train.loc[:,num_cols])
     # Use the same transform on test:
     test.loc[:, num_cols] = ss.transform(test.loc[:,num_cols])
-
-train_raw = read_data("data/train_data.txt")
-fill_missing(train_raw)
-train_X, train_y = feature_xform(train_raw)
-
-test_raw = read_data("data/test_data.txt")
-fill_missing(test_raw)
-test_X, test_y =  feature_xform(train_raw)
-
-standardize(train_X, test_X)
-
-# TODO:
-# Document 'standardize'
-# Perhaps be consistent on whether functions modify dataframe or not
-
-# N.B.:
-# The labels are very lopsided (it's 0 around 25% of the time)
-# 'education' appears redundant with 'education_num'
-# 'relationship' is likely redundant with 'marital_status' (certain ones at least)
-# 'race' might have some redundancy with 'native_country'
