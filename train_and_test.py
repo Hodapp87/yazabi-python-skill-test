@@ -54,15 +54,7 @@ def train_naive_bayes(train_X, train_y):
     # seemingly no hyperparameters to speak of, so feature
     # selection/transformation is the place to begin with tuning.
     #
-    # The features below are the top 18 features that
-    # RandomForestClassifier returns in order of importance.  The
-    # number was selected via cross-validation on the training data.
-    columns = ('marital_status_Married-civ-spouse',
-               'net_capital',
-               'relationship_Husband',
-               'age',
-               'marital_status_Never-married',
-               'education_num')
+    columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
     # Turn columns to indices, as FunctionTransformer seems to receive
     # normal NumPy arrays (not dataframes):
     idxs = [train_X.columns.get_loc(c) for c in columns]
@@ -74,31 +66,27 @@ def train_naive_bayes(train_X, train_y):
     return pipeline
 
 def train_decision_tree(train_X, train_y):
-    dt = sklearn.tree.DecisionTreeClassifier()
-    dt.fit(train_X, train_y)
-    return dt
+    columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
+    idxs = [train_X.columns.get_loc(c) for c in columns]
+    pipeline = sklearn.pipeline.make_pipeline(
+        sklearn.preprocessing.FunctionTransformer(lambda x: x[:, idxs]),
+        sklearn.tree.DecisionTreeClassifier(),
+    )
+    pipeline.fit(train_X, train_y)
+    return pipeline
 
 def train_knn(train_X, train_y):
-    knn = sklearn.neighbors.KNeighborsClassifier(10, n_jobs=-1)
-    knn.fit(train_X, train_y)
-    return knn
+    columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
+    idxs = [train_X.columns.get_loc(c) for c in columns]
+    pipeline = sklearn.pipeline.make_pipeline(
+        sklearn.preprocessing.FunctionTransformer(lambda x: x[:, idxs]),
+        sklearn.neighbors.KNeighborsClassifier(10, n_jobs=-1),
+    )
+    pipeline.fit(train_X, train_y)
+    return pipeline
 
 def train_svm(train_X, train_y):
-    columns = ('marital_status_Married-civ-spouse',
-               'net_capital',
-               'relationship_Husband',
-               'age',
-               'marital_status_Never-married',
-               'education_num')
-    """columns = ('marital_status_Married-civ-spouse',
-               'relationship_Husband', 'net_capital',
-               'marital_status_Never-married', 'education_num',
-               'age', 'relationship_Own-child', 'hours_per_week',
-               'relationship_Not-in-family',
-               'occupation_Exec-managerial', 'male',
-               'occupation_Other-service', 'education_Bachelors',
-               'education_Masters', 'relationship_Wife',
-               'occupation_Prof-specialty', 'education_Prof-school')"""
+    columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
     idxs = [train_X.columns.get_loc(c) for c in columns]
     pipeline = sklearn.pipeline.make_pipeline(
         sklearn.preprocessing.FunctionTransformer(lambda x: x[:, idxs]),
@@ -183,6 +171,6 @@ for i in range(30):
 # Perhaps use sklearn.feature_selection.RFE with GaussianNB or KNN.
 
 if __name__ == '__main__':
-    for algo in ("naive_bayes", "decision_tree", "svm"): # , "knn"):
+    for algo in ("naive_bayes", "decision_tree", "svm", "knn"):
         print(algo + ": ")
         train_and_validate(algo)
