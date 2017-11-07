@@ -16,6 +16,8 @@ def get_processed_data():
     where 'train_X' is a DataFrame containing features for the
     training data, 'train_y' is a Series with the corresponding
     labels, and likewise for 'test_X' and 'test_y' for testing data."""
+    # Data source:
+    # https://archive.ics.uci.edu/ml/datasets/adult
     train_raw = read_data("data/train_data.txt")
     test_raw = read_data("data/test_data.txt")
     fill_missing(train_raw)
@@ -74,6 +76,13 @@ def feature_xform(df):
         X = X.join(feature_onehot).drop(col, axis=1)
     # Gender is binary (here at least):
     X = X.assign(male = (X.sex == "Male")*1).drop("sex", axis=1)
+    # 'fnlwgt' appears to be meaningless here as it's relative to the
+    # state, which isn't given:
+    X = X.drop("fnlwgt", axis=1)
+    # 'capital_gain' and 'capital_loss' never appear together and can
+    # probably be turned to one feature:
+    X = X.assign(net_capital = X.capital_gain - X.capital_loss).\
+          drop(["capital_gain", "capital_loss"], axis=1)
     # Encode label, which is also binary:
     y = (df.income == ">50K") * 1
     return (X, y)
