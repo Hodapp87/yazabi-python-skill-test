@@ -58,14 +58,11 @@ def train_naive_bayes(train_X, train_y):
     # RandomForestClassifier returns in order of importance.  The
     # number was selected via cross-validation on the training data.
     columns = ('marital_status_Married-civ-spouse',
-               'relationship_Husband', 'capital_gain',
-               'marital_status_Never-married', 'education_num',
-               'age', 'relationship_Own-child', 'hours_per_week',
-               'relationship_Not-in-family', 'capital_loss',
-               'occupation_Exec-managerial', 'male',
-               'occupation_Other-service', 'education_Bachelors',
-               'education_Masters', 'relationship_Wife',
-               'occupation_Prof-specialty', 'education_Prof-school')
+               'net_capital',
+               'relationship_Husband',
+               'age',
+               'marital_status_Never-married',
+               'education_num')
     # Turn columns to indices, as FunctionTransformer seems to receive
     # normal NumPy arrays (not dataframes):
     idxs = [train_X.columns.get_loc(c) for c in columns]
@@ -77,9 +74,6 @@ def train_naive_bayes(train_X, train_y):
     return pipeline
 
 def train_decision_tree(train_X, train_y):
-    # Oddly enough, DecisionTreeClassifier has an accuracy of 99.991%
-    # on test data with no tuning whatsoever, so I see no reason to
-    # mess with its parameters or to remove its features.
     dt = sklearn.tree.DecisionTreeClassifier()
     dt.fit(train_X, train_y)
     return dt
@@ -91,14 +85,20 @@ def train_knn(train_X, train_y):
 
 def train_svm(train_X, train_y):
     columns = ('marital_status_Married-civ-spouse',
-               'relationship_Husband', 'capital_gain',
+               'net_capital',
+               'relationship_Husband',
+               'age',
+               'marital_status_Never-married',
+               'education_num')
+    """columns = ('marital_status_Married-civ-spouse',
+               'relationship_Husband', 'net_capital',
                'marital_status_Never-married', 'education_num',
                'age', 'relationship_Own-child', 'hours_per_week',
-               'relationship_Not-in-family', 'capital_loss',
+               'relationship_Not-in-family',
                'occupation_Exec-managerial', 'male',
                'occupation_Other-service', 'education_Bachelors',
                'education_Masters', 'relationship_Wife',
-               'occupation_Prof-specialty', 'education_Prof-school')
+               'occupation_Prof-specialty', 'education_Prof-school')"""
     idxs = [train_X.columns.get_loc(c) for c in columns]
     pipeline = sklearn.pipeline.make_pipeline(
         sklearn.preprocessing.FunctionTransformer(lambda x: x[:, idxs]),
@@ -107,6 +107,7 @@ def train_svm(train_X, train_y):
     pipeline.fit(train_X, train_y)
     return pipeline
 
+"""
 # Feature importance tuning:
 rf = sklearn.ensemble.RandomForestClassifier(
     n_estimators=100, criterion="entropy", max_depth=4, n_jobs=-1,
@@ -121,6 +122,7 @@ features.sort_values("Importance", inplace=True, ascending=False)
 nb = sklearn.naive_bayes.GaussianNB()
 rfe = sklearn.feature_selection.RFECV(nb)
 rfe.fit(train_X, train_y)
+"""
 
 """
 knn = sklearn.neighbors.KNeighborsClassifier(10, n_jobs=-1)
@@ -157,6 +159,7 @@ print("Best score: {0}".format(clf.best_score_))
 print("Best params: {0}".format(clf.best_params_))
 """
 
+"""
 print("-"*70)
 print("KNN:")
 print("-"*70)
@@ -169,6 +172,7 @@ for i in range(30):
     #print(clf.cv_results_)
     print("Best score: {0}".format(clf.best_score_))
     print("Best params: {0}".format(clf.best_params_))
+"""
 
 # N.B.:
 # The labels are very lopsided (it's 0 around 25% of the time)

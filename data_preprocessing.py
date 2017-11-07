@@ -23,8 +23,11 @@ def get_processed_data():
     fill_missing(train_raw)
     fill_missing(test_raw)
     train_X, train_y = feature_xform(train_raw)
-    test_X, test_y =  feature_xform(train_raw)
-
+    test_X,  test_y  = feature_xform(test_raw)
+    # This value is present in training but not testing, so it's
+    # missing from the one-hot encoding here:
+    test_X["native_country_Holand-Netherlands"] = 0
+    
     standardize(train_X, test_X)
     
     return (train_X, train_y, test_X, test_y)
@@ -78,7 +81,7 @@ def feature_xform(df):
     X = X.assign(male = (X.sex == "Male")*1).drop("sex", axis=1)
     # 'fnlwgt' appears to be meaningless here as it's relative to the
     # state, which isn't given:
-    X = X.drop("fnlwgt", axis=1)
+    #X = X.drop("fnlwgt", axis=1)
     # 'capital_gain' and 'capital_loss' never appear together and can
     # probably be turned to one feature:
     X = X.assign(net_capital = X.capital_gain - X.capital_loss).\
@@ -95,7 +98,8 @@ def standardize(train, test):
     """
     ss = sk.StandardScaler()
     # Numeric columns needing standardization:
-    num_cols = ("age", "education_num", "net_capital", "hours_per_week")
+    num_cols = ("age", "education_num", "net_capital",
+                "hours_per_week", "fnlwgt")
     train.loc[:, num_cols] = ss.fit_transform(train.loc[:,num_cols])
     # Use the same transform on test:
     test.loc[:, num_cols] = ss.transform(test.loc[:,num_cols])
