@@ -95,8 +95,7 @@ def standardize(train, test):
     """
     ss = sk.StandardScaler()
     # Numeric columns needing standardization:
-    num_cols = ("age", "fnlwgt", "education_num", "capital_gain",
-                "capital_loss", "hours_per_week")
+    num_cols = ("age", "education_num", "net_capital", "hours_per_week")
     train.loc[:, num_cols] = ss.fit_transform(train.loc[:,num_cols])
     # Use the same transform on test:
     test.loc[:, num_cols] = ss.transform(test.loc[:,num_cols])
