@@ -96,58 +96,6 @@ def train_svm(train_X, train_y):
     return pipeline
 
 """
-# Feature importance tuning:
-rf = sklearn.ensemble.RandomForestClassifier(
-    n_estimators=100, criterion="entropy", max_depth=4, n_jobs=-1,
-    random_state=12348)
-rf = rf.fit(train_X, train_y)
-features = pd.DataFrame(
-    {"Feature": list(train_X.columns),
-     "Importance": rf.feature_importances_})
-features.sort_values("Importance", inplace=True, ascending=False)
-#features
-
-nb = sklearn.naive_bayes.GaussianNB()
-rfe = sklearn.feature_selection.RFECV(nb)
-rfe.fit(train_X, train_y)
-"""
-
-"""
-knn = sklearn.neighbors.KNeighborsClassifier(10, n_jobs=-1)
-scores = sklearn.model_selection.cross_val_score(
-    knn,
-    train_X[list(features.Feature[:15])],
-    train_y,
-    cv=sklearn.model_selection.StratifiedShuffleSplit())
-print(scores)
-
-nb = sklearn.naive_bayes.GaussianNB()
-scores = sklearn.model_selection.cross_val_score(
-    nb,
-    train_X[list(features.Feature[:18])],
-    train_y,
-    cv=sklearn.model_selection.StratifiedShuffleSplit())
-print(scores.mean(), scores.std())
-
-# KNN tuning:
-train_X, train_y, test_X, test_y = data_preprocessing.get_processed_data()
-
-print("-"*70)
-print("SVM:")
-print("-"*70)
-n_features = train_X.shape[1]
-params = {
-    'gamma': np.linspace(n_features / 3, n_features * 3, 20),
-    'C': np.linspace(0.1, 1.0, 20),
-}
-svm = sklearn.svm.SVC(random_state=123456)
-clf.fit(train_X, train_y)
-#print(clf.cv_results_)
-print("Best score: {0}".format(clf.best_score_))
-print("Best params: {0}".format(clf.best_params_))
-"""
-
-"""
 print("-"*70)
 print("KNN:")
 print("-"*70)
@@ -161,14 +109,6 @@ for i in range(30):
     print("Best score: {0}".format(clf.best_score_))
     print("Best params: {0}".format(clf.best_params_))
 """
-
-# N.B.:
-# The labels are very lopsided (it's 0 around 25% of the time)
-# 'education' appears redundant with 'education_num'
-# 'relationship' is likely redundant with 'marital_status' (certain ones at least)
-# 'race' might have some redundancy with 'native_country'
-# See if PCA can improve anything here.
-# Perhaps use sklearn.feature_selection.RFE with GaussianNB or KNN.
 
 if __name__ == '__main__':
     for algo in ("naive_bayes", "decision_tree", "svm", "knn"):

@@ -63,15 +63,18 @@ def fill_missing(df):
     df.occupation.fillna("Other", inplace=True)
 
 def feature_xform(df):
-    """Given raw data (as from 'read_data'), processes all columns into
-    numerical form and returns (X, y) where 'X' is a DataFrame for
-    features and 'y' is a Series for the corresponding labels (where 0
-    is <= 50K, and 1 is > 50K).
+    """Given raw data (as from 'read_data'), selects and transforms
+    features, including turning categorical columns into numerical
+    form.
+
+    Returns (X, y) where 'X' is a DataFrame for features and 'y' is a
+    Series for the corresponding labels (where 0 is <= 50K, and 1 is >
+    50K).
     """
     # Extract just the features (everything but 'income'):
     cols = [c for c in df.columns if c != 'income']
     X = df[cols]
-    # One-hot encode everything in this tuple, join it to X', and
+    # One-hot encode everything in this tuple, join it to X, and
     # drop the original column:
     onehot_cols = ("workclass", "education", "marital_status", "occupation",
                    "relationship", "race", "native_country")
@@ -104,3 +107,9 @@ def standardize(train, test):
     train.loc[:, num_cols] = ss.fit_transform(train.loc[:,num_cols])
     # Use the same transform on test:
     test.loc[:, num_cols] = ss.transform(test.loc[:,num_cols])
+
+# N.B.:
+# - 'education' appears redundant with 'education_num'
+# - 'relationship' is likely redundant with 'marital_status' (certain
+# ones at least)
+# - 'race' might have some redundancy with 'native_country'
