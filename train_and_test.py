@@ -80,17 +80,58 @@ def train_knn(train_X, train_y):
     idxs = [train_X.columns.get_loc(c) for c in columns]
     pipeline = sklearn.pipeline.make_pipeline(
         sklearn.preprocessing.FunctionTransformer(lambda x: x[:, idxs]),
-        sklearn.neighbors.KNeighborsClassifier(10, n_jobs=-1),
+        sklearn.neighbors.KNeighborsClassifier(5, weights="distance", n_jobs=-1),
     )
     pipeline.fit(train_X, train_y)
     return pipeline
 
 def train_svm(train_X, train_y):
-    columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
+    # Rank 1 features of RFECV:
+    columns = [ 'age', 'native_country_Germany',
+                'native_country_France', 'native_country_England',
+                'native_country_Dominican-Republic', 'native_country_Cuba',
+                'native_country_Columbia', 'native_country_China',
+                'native_country_Canada', 'native_country_Cambodia',
+                'race_White', 'race_Other', 'race_Black',
+                'race_Amer-Indian-Eskimo', 'relationship_Wife',
+                'relationship_Unmarried', 'relationship_Own-child', 'male',
+                'relationship_Not-in-family', 'relationship_Husband',
+                'native_country_Greece', 'native_country_Guatemala',
+                'native_country_Honduras', 'native_country_Hong',
+                'native_country_Yugoslavia', 'native_country_Vietnam',
+                'native_country_United-States', 'native_country_Thailand',
+                'native_country_Taiwan', 'native_country_South',
+                'native_country_Scotland', 'native_country_Portugal',
+                'native_country_Poland', 'occupation_Transport-moving',
+                'native_country_Philippines',
+                'native_country_Outlying-US(Guam-USVI-etc)',
+                'native_country_Nicaragua', 'native_country_Mexico',
+                'native_country_Laos', 'native_country_Japan',
+                'native_country_Jamaica', 'native_country_Italy',
+                'native_country_Ireland', 'native_country_Hungary',
+                'native_country_Peru', 'occupation_Tech-support',
+                'relationship_Other-relative', 'occupation_Protective-serv',
+                'education_Preschool', 'occupation_Sales',
+                'education_Assoc-acdm', 'education_9th', 'education_7th-8th',
+                'education_5th-6th', 'education_1st-4th',
+                'workclass_Without-pay', 'workclass_State-gov',
+                'workclass_Self-emp-not-inc', 'workclass_Private',
+                'workclass_Local-gov', 'workclass_Federal-gov',
+                'hours_per_week', 'education_num', 'education_Prof-school',
+                'marital_status_Divorced', 'net_capital',
+                'occupation_Priv-house-serv',
+                'marital_status_Married-civ-spouse', 'occupation_Other',
+                'marital_status_Married-spouse-absent',
+                'marital_status_Never-married', 'occupation_Prof-specialty',
+                'occupation_Exec-managerial', 'marital_status_Separated',
+                'marital_status_Married-AF-spouse',
+                'occupation_Machine-op-inspct', 'occupation_Armed-Forces',
+                'occupation_Handlers-cleaners', 'occupation_Farming-fishing',
+                'occupation_Other-service', 'marital_status_Widowed' ]
     idxs = [train_X.columns.get_loc(c) for c in columns]
     pipeline = sklearn.pipeline.make_pipeline(
         sklearn.preprocessing.FunctionTransformer(lambda x: x[:, idxs]),
-        sklearn.svm.SVC(random_state=123456),
+        sklearn.svm.SVC(kernel="rbf", random_state=123456),
     )
     pipeline.fit(train_X, train_y)
     return pipeline
