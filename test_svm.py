@@ -38,7 +38,7 @@ print("SVM:")
 print("-"*70)
 svm = sklearn.svm.SVC(kernel="rbf", random_state=123456)
 params = {'C': np.linspace(0.4, 2, 5)}
-clf = sklearn.model_selection.GridSearchCV(knn, params)
+clf = sklearn.model_selection.GridSearchCV(svm, params)
 clf.fit(train_X[list(features.Feature[:(i+10)])], train_y)
 print(clf.cv_results_)
 print("Best score: {0}".format(clf.best_score_))
