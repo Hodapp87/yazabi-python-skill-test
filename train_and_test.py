@@ -60,7 +60,6 @@ def train_naive_bayes(train_X, train_y):
                'education_Masters', 'marital_status_Never-married',
                'education_Bachelors', 'relationship_Not-in-family',
                'occupation_Exec-managerial']
-    #columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
     # Turn columns to indices, as FunctionTransformer seems to receive
     # normal NumPy arrays (not dataframes):
     idxs = [train_X.columns.get_loc(c) for c in columns]
@@ -72,14 +71,15 @@ def train_naive_bayes(train_X, train_y):
     return pipeline
 
 def train_decision_tree(train_X, train_y):
-    columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
-    idxs = [train_X.columns.get_loc(c) for c in columns]
-    pipeline = sklearn.pipeline.make_pipeline(
-        sklearn.preprocessing.FunctionTransformer(lambda x: x[:, idxs]),
-        sklearn.tree.DecisionTreeClassifier(),
+    #columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
+    # Parameters found with grid search:
+    dt = sklearn.tree.DecisionTreeClassifier(
+        min_samples_split = 2,
+        min_samples_leaf = 4,
+        max_depth = 10,
     )
-    pipeline.fit(train_X, train_y)
-    return pipeline
+    dt.fit(train_X, train_y)
+    return dt
 
 def train_knn(train_X, train_y):
     columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
@@ -93,7 +93,7 @@ def train_knn(train_X, train_y):
 
 def train_svm(train_X, train_y):
     pipeline = sklearn.pipeline.make_pipeline(
-        sklearn.svm.SVC(kernel="rbf", C=4.0, random_state=123456),
+        sklearn.svm.SVC(kernel="rbf", C=10.0, random_state=123456),
     )
     pipeline.fit(train_X, train_y)
     return pipeline
@@ -114,6 +114,6 @@ for i in range(30):
 """
 
 if __name__ == '__main__':
-    for algo in ("naive_bayes", "decision_tree", "svm", "knn"):
+    for algo in ("naive_bayes", "decision_tree", "knn", "svm"):
         print(algo + ": ")
         train_and_validate(algo)

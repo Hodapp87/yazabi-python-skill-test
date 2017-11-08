@@ -44,7 +44,7 @@ params = {
     'min_impurity_decrease': (0.0, 0.1, 0.2, 0.3, 0.4),
     'max_features': (None, 'auto', 'log2'),
 }
-clf = sklearn.model_selection.GridSearchCV(dt, params, verbose=100)
+clf = sklearn.model_selection.GridSearchCV(dt, params, verbose=100, cv=sklearn.model_selection.StratifiedShuffleSplit(), n_jobs=-1)
 clf.fit(train_X, train_y)
 print(clf.cv_results_)
 print("Best score: {0}".format(clf.best_score_))
