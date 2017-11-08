@@ -42,7 +42,7 @@ params = {
     'min_samples_split': (2, 4, 8, 16),
     'min_samples_leaf': (2, 4, 8, 16),
     'min_impurity_decrease': (0.0, 0.1, 0.2, 0.3, 0.4),
-    'max_feature': (None, 'auto', 'log2'),
+    'max_features': (None, 'auto', 'log2'),
 }
 clf = sklearn.model_selection.GridSearchCV(dt, params, verbose=100)
 clf.fit(train_X, train_y)
