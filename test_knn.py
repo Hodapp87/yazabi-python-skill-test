@@ -57,5 +57,18 @@ def forward_selection(X, y, estimator, features=None, max_iters=None):
 
 train_X, train_y, test_X, test_y = data_preprocessing.get_processed_data()
 
-features = forward_selection(train_X, train_y, sklearn.neighbors.KNeighborsClassifier(6, n_jobs=-1))
-print(features)
+print("-"*70)
+print("kNN:")
+print("-"*70)
+knn = sklearn.neighbors.KNeighborsClassifier(n_jobs=-1)
+params = {'n_neighbors': range(1, 13), 'weights': ['distance', 'uniform']}
+features = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
+clf = sklearn.model_selection.GridSearchCV(knn, params)
+clf.fit(train_X[features], train_y)
+print(clf.cv_results_)
+print("Best score: {0}".format(clf.best_score_))
+print("Best params: {0}".format(clf.best_params_))
+
+
+#features = forward_selection(train_X, train_y, sklearn.neighbors.KNeighborsClassifier(6, n_jobs=-1))
+#print(features)
