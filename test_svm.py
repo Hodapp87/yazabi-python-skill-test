@@ -18,6 +18,7 @@ import sklearn.tree
 
 train_X, train_y, test_X, test_y = data_preprocessing.get_processed_data()
 
+"""
 #svm = sklearn.svm.SVC(kernel="linear", random_state=123456)
 svm = sklearn.svm.LinearSVC(random_state=123456)
 selector = sklearn.feature_selection.RFECV(svm, step=1,
@@ -30,3 +31,15 @@ features = pd.DataFrame(
 features.sort_values("RFE rank", inplace=True, ascending=True)
 features.to_csv("rfe_linearsvc.csv", index=False)
 print(features)
+"""
+
+print("-"*70)
+print("SVM:")
+print("-"*70)
+svm = sklearn.svm.SVC(kernel="rbf", random_state=123456)
+params = {'C': np.linspace(0.4, 2, 5)}
+clf = sklearn.model_selection.GridSearchCV(knn, params)
+clf.fit(train_X[list(features.Feature[:(i+10)])], train_y)
+print(clf.cv_results_)
+print("Best score: {0}".format(clf.best_score_))
+print("Best params: {0}".format(clf.best_params_))

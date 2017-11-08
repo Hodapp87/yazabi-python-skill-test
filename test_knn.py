@@ -24,6 +24,7 @@ def forward_selection(X, y, estimator, features=None, max_iters=None):
     if max_iters is None:
         max_iters = X.shape[1]
     best_features = []
+    incr_accuracy = []
     base_accuracy = 0
     for i in range(max_iters):
         print("Iteration {0}/{1}:".format(i+1, max_iters))
@@ -45,9 +46,14 @@ def forward_selection(X, y, estimator, features=None, max_iters=None):
         print("Feature \"{1}\" raises accuracy from {2} to {3}".format(i, best_feature, base_accuracy, best_accuracy))
         base_accuracy = best_accuracy
         best_features.append(best_feature)
+        incr_accuracy.append(best_accuracy)
         print("{0} features: {1}".format(len(best_features), best_features))
         features.remove(best_feature)
-    return best_features
+    df = pd.DataFrame.from_dict(
+        {"Feature": best_features, 
+         "Accuracy": incr_accuracy,
+        })
+    return df
 
 train_X, train_y, test_X, test_y = data_preprocessing.get_processed_data()
 
