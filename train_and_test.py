@@ -54,7 +54,12 @@ def train_naive_bayes(train_X, train_y):
     # seemingly no hyperparameters to speak of, so feature
     # selection/transformation is the place to begin with tuning.
     #
-    columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
+    columns = ['net_capital', 'education_Prof-school',
+               'education_Doctorate', 'occupation_Transport-moving',
+               'education_Masters', 'marital_status_Never-married',
+               'education_Bachelors', 'relationship_Not-in-family',
+               'occupation_Exec-managerial']
+    #columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
     # Turn columns to indices, as FunctionTransformer seems to receive
     # normal NumPy arrays (not dataframes):
     idxs = [train_X.columns.get_loc(c) for c in columns]
