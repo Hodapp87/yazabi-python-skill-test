@@ -61,7 +61,7 @@ print("-"*70)
 print("kNN:")
 print("-"*70)
 knn = sklearn.neighbors.KNeighborsClassifier(n_jobs=-1)
-params = {'n_neighbors': range(1, 13), 'weights': ['distance', 'uniform']}
+params = {'n_neighbors': range(1, 17), 'weights': ['distance', 'uniform']}
 features = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
 clf = sklearn.model_selection.GridSearchCV(knn, params)
 clf.fit(train_X[features], train_y)

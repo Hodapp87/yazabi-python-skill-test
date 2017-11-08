@@ -82,20 +82,18 @@ def train_decision_tree(train_X, train_y):
     return pipeline
 
 def train_knn(train_X, train_y):
-    columns = ['net_capital', 'education_num']
-    #['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
+    columns = ['education_num', 'marital_status_Married-civ-spouse', 'net_capital']
     idxs = [train_X.columns.get_loc(c) for c in columns]
     pipeline = sklearn.pipeline.make_pipeline(
         sklearn.preprocessing.FunctionTransformer(lambda x: x[:, idxs]),
-        sklearn.neighbors.KNeighborsClassifier(5, weights="distance", n_jobs=-1),
+        sklearn.neighbors.KNeighborsClassifier(11, weights="distance", n_jobs=-1),
     )
     pipeline.fit(train_X, train_y)
     return pipeline
 
 def train_svm(train_X, train_y):
-    
     pipeline = sklearn.pipeline.make_pipeline(
-        sklearn.svm.SVC(kernel="rbf", random_state=123456),
+        sklearn.svm.SVC(kernel="rbf", C=4.0, random_state=123456),
     )
     pipeline.fit(train_X, train_y)
     return pipeline
