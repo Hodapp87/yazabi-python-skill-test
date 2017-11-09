@@ -37,7 +37,11 @@ print("-"*70)
 print("SVM:")
 print("-"*70)
 svm = sklearn.svm.SVC(kernel="rbf", random_state=123456)
-params = {'C': np.linspace(5.0, 40.0, 20)}
+gamma0 = 1 / float(train_X.shape[0])
+params = {
+    'C': (10,), # np.linspace(5.0, 40.0, 20),
+    'gamma': np.linspace(gamma0 / 4, gamma0 * 4, 10),
+}
 clf = sklearn.model_selection.GridSearchCV(svm, params, verbose=2, cv=sklearn.model_selection.StratifiedShuffleSplit(), n_jobs=-1)
 clf.fit(train_X, train_y)
 print(clf.cv_results_)
